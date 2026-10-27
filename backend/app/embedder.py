@@ -1,15 +1,37 @@
-from sentence_transformers import SentenceTransformer
 
-# Load the model once
-model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2",device="cpu")
+from fastembed import TextEmbedding
+import math
+
+# Load the lightweight ONNX embedding model once
+model = TextEmbedding(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 
 
 def generate_embeddings(chunks: list[str]) -> list[list[float]]:
-    embeddings = model.encode(
+    # Generate embeddings in small batches
+    vectors = model.embed(
         chunks,
-        normalize_embeddings=True,
-        batch_size=4,
-        show_progress_bar=False
+        batch_size=4
     )
 
-    return embeddings.tolist()
+    embeddings = []
+
+    for vector in vectors:
+        values = vector.tolist()
+
+        # Normalize the vector, matching the previous
+        # normalize_embeddings=True behavior
+        magnitude = math.sqrt(
+            sum(value * value for value in values)
+        )
+
+        if magnitude > 0:
+            values = [
+                value / magnitude
+                for value in values
+            ]
+
+        embeddings.append(values)
+
+    return embeddings
