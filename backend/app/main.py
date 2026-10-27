@@ -16,7 +16,7 @@ app = FastAPI(title="DocuMind API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000","https://docu-mind-gxhw8lg3e-gouthams-projects-9b50d089.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
