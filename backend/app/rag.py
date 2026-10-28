@@ -14,7 +14,7 @@ if not api_key:
     raise RuntimeError("GROQ_API_KEY is missing from .env")
 
 client = Groq(api_key=api_key)
-
+#
 
 def answer_question(
     question: str,
